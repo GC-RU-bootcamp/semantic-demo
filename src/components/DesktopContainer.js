@@ -83,7 +83,7 @@ export default class DesktopContainer extends Component {
                       Sign Up
                     </Button>
                   </Link> */}
-                  <ModalLogin passHandler={this.handleClick} btnMsg={this.state.in ? 'Log out' : 'Log in'} > 
+                  <ModalLogin passHandler={this.handleClick} logState={this.state.in} btnMsg={this.state.in ? 'Log out' : 'Log in'} > 
                   
                   </ModalLogin>
                   <Button as='a' inverted={!fixed} primary={fixed} style={this.state.in ?{display:'none'}:{ marginLeft: '0.5em' }}>
