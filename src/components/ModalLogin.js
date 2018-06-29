@@ -12,7 +12,13 @@ class ModalExampleCloseConfig extends Component {
     console.log("context",context);
   }
   closeConfigShow = (closeOnEscape, closeOnRootNodeClick) => () => {
-    this.setState({ closeOnEscape, closeOnRootNodeClick, open: true })
+    if (!this.props.logState){
+      this.setState({ closeOnEscape, closeOnRootNodeClick, open: true });
+  } else {
+      this.setState({ closeOnEscape, closeOnRootNodeClick, open: false });
+      this.props.passHandler();
+    }
+
   }
 
   close = () => this.setState({ open: false })
@@ -24,7 +30,12 @@ class ModalExampleCloseConfig extends Component {
   render(props) {
     const { open, closeOnEscape, closeOnRootNodeClick } = this.state
     console.log(this.state);
-    console.log(props);
+    console.log(this.props);
+
+    // if (this.props.logState){
+    //   this.createClose();
+    //   // return ;
+    // }
 
     return (
       <div>
@@ -40,15 +51,15 @@ class ModalExampleCloseConfig extends Component {
           <Modal.Content>
             <p>Your ticket to good health</p>
             <Form>
-    <Form.Field>
-      <label>login name</label>
-      <input placeholder='log in name' name="login" />
-    </Form.Field>
-    <Form.Field>
-      <label>Password</label>
-      <input placeholder='Password' type="password" name="password" />
-    </Form.Field> 
-    </Form>
+              <Form.Field>
+                <label>login name</label>
+                <input placeholder='log in name' name="login" />
+              </Form.Field>
+              <Form.Field>
+                <label>Password</label>
+                <input placeholder='Password' type="password" name="password" />
+              </Form.Field> 
+            </Form>
           </Modal.Content>
           <Modal.Actions>
             <Button onClick={this.close} negative  color='red' inverted>
