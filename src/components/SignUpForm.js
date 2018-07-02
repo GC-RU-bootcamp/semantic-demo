@@ -103,6 +103,11 @@ class SignUpForm extends Component {
                 <label>Cell Phone</label>
                 <input placeholder='Cell Phone' name="signUpCell" onChange={this.props.textHandler}/>
               </Form.Field>
+              <Form.Field>
+                <label>Profile picture</label>
+                <input type="file" placeholder='' name="signUpFile" onChange={this.props.fileHandler}/>
+                {/* <button onClick={this.uploadHandler}>Upload!</button> */}
+              </Form.Field>
               {/* See for image upload:   https://www.academind.com/learn/react/snippets/image-upload/*/}
               {/* <Form.Field>
                 <label>Password</label>
