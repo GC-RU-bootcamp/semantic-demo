@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import ModalLogin from './ModalLogin.js';
 
 import {
-  Button ,
+//  Button ,
   Container,
   Menu ,
   Responsive ,
@@ -19,21 +19,30 @@ export default class DesktopContainer extends Component {
     super(props); 
     this.state = {
       in: false, /*logged in ?    we can eliminate this and just use role*/
-      role: ""}  /*role is falsey when not logged in*/
+      role: "",
+      username: "",
+      firstName: "",
+      lastName: ""
+    }  /*role is falsey when not logged in*/
 
     this.handleClick = this.handleClick.bind(this);
   }
 
   hideFixedMenu = () => this.setState({ fixed: false })
   showFixedMenu = () => this.setState({ fixed: true })
+  
+  handleClick(param) {
+    console.log("DesktopContainer param:", param);
 
-  handleClick() {
     this.setState(prevState => ({
-      in: !prevState.in
-      
+      in: !prevState.in,
+      role: param.role,
+      username: param.logon_id,
+      firstName: param.firstName,
+      lastName: param.lastName,
 
     }));
-    
+    console.log("DesktopContainer state:", this.state);
   }
 
   render() {
@@ -86,9 +95,10 @@ export default class DesktopContainer extends Component {
                   <ModalLogin passHandler={this.handleClick} logState={this.state.in} btnMsg={this.state.in ? 'Log out' : 'Log in'} > 
                   
                   </ModalLogin>
-                  <Button as='a' inverted={!fixed} primary={fixed} style={this.state.in ?{display:'none'}:{ marginLeft: '0.5em' }}>
+                  <span>{" " + this.state.firstName + " " + this.state.lastName }</span>
+                  {/* <Button as='a' inverted={!fixed} primary={fixed} style={this.state.in ?{display:'none'}:{ marginLeft: '0.5em' }}>
                     Sign Up
-                  </Button>
+                  </Button> */}
                 </Menu.Item>
               </Container>
             </Menu>
