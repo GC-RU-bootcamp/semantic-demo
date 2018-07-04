@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { Button, Modal } from 'semantic-ui-react'
+import { Button, Modal, Label } from 'semantic-ui-react'
 //import { Input } from 'semantic-ui-react'
 //import { Form } from 'semantic-ui-react'
 import  LoginForm  from './LoginForm'
 import  SignUpForm  from './SignUpForm'
 import  API  from '../utilities/API'
 
-class ModalExampleCloseConfig extends Component {
+class ModalLogin extends Component {
   constructor(props, context) {
     super(props, context); 
     this.state = { open: false,
@@ -21,71 +21,57 @@ class ModalExampleCloseConfig extends Component {
       signUpfile: "",
       showLogin: "" // show=true show login form else show signup
     };
-    this.handleOninputTextChange = this.handleOninputTextChange.bind(this);
+
+    this.handleOninputChange = this.handleOninputChange.bind(this);
     this.fileChangedHandler = this.fileChangedHandler.bind(this);
     this.PickForm = this.PickForm.bind(this);
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.signup = this.signup.bind(this);
-    console.log("ModalExampleCloseConfig props", props);
-    console.log("ModalExampleCloseConfig context",context);
+    // console.log("ModalLogin props", props);
+    // console.log("ModalLogin context",context);
+    console.log("<ModalLogin> constructor() state=>", this.state," props=>", this.props, " context=>", this.context);
+
   }
  
-  handleOninputTextChange(event, data) {
-    // console.log("ModalExampleCloseConfig.handleOninputTextChange.event", event.target);
-    // console.log("ModalExampleCloseConfig.handleOninputTextChange.data", data);
+  handleOninputChange(event, data) {
+    // console.log("ModalLogin.handleOninputChange.event", event.target);
+    // console.log("ModalLogin.handleOninputChange.data", data);
     let { name, value } = event.target;
-    if (!name){
+    if (!name){ // type=select
        name = data.name;
        value = data.value;
     }
-    console.log("ModalExampleCloseConfig.handleOninputTextChange:", [name], value);
-   
-      this.setState({
-        [name]: value
-      });
+    //console.log("ModalLogin.handleOninputChange:", [name], value);
+    this.setState({
+      [name]: value
+    });
   }
 
   fileChangedHandler = (event) => {
     this.setState({signUpfile: event.target.files[0]})
-    console.log("ModalExampleCloseConfig.fileChangedHandler:", event.target.name, event.target.files[0].name);
-
+    //console.log("ModalLogin.fileChangedHandler:", event.target.name, event.target.files[0].name);
   }
 
   closeConfigShow = (closeOnEscape, closeOnRootNodeClick, showLogin) => () => {
-    if (!this.props.logState){
+    if (!this.props.passHandler.loginState.role){
       this.setState({ closeOnEscape, closeOnRootNodeClick, showLogin: showLogin, open: true });
   } else {
       this.setState({ closeOnEscape, closeOnRootNodeClick, showLogin: showLogin,  open: false });
-      //this.props.passHandler();
       this.logout();
     }
-
   }
 
   close = () => this.setState({ open: false })
 
   createClose = () => {
-      // this.props.passHandler();
       this.setState({ open: false });
-      // const retval = API.loginAPI(this.state.username, this.state.password );
-      console.log("createClose showLogin", this.state.showLogin);
-      let retval = "";
+      //console.log("createClose showLogin", this.state.showLogin);
       if (this.state.showLogin) {
-        retval = this.login(this.state.username, this.state.password );
+        this.login(this.state.username, this.state.password );
       } else {
-        retval = this.signup(this.state);
-        // retval = { // dummy stub values
-        //   logon_id: "shaun",
-        //   firstName: "Shaun",
-        //   lastName: "T",
-        //   role: "host",
-        //   photo: ""
-        // };
-        // this.props.passHandler(retval); // STUB until formData is figured out for signup
+        this.signup(this.state);
       }
-      console.log("createClose retval", retval);
-
   };
 
   login = (username, password ) => {
@@ -95,8 +81,8 @@ class ModalExampleCloseConfig extends Component {
     };
       API.userLogin(params)
         .then((result) => {
-          console.log("login API results:", result.data);
-          this.props.passHandler(result.data)})
+         // console.log("login API results:", result.data);
+          this.props.passHandler.modalSubmit(result.data)})
         .catch(err => console.log(err))
     };
 
@@ -104,7 +90,7 @@ class ModalExampleCloseConfig extends Component {
           API.userLogout()
           .then((result) => {
             console.log("logout API results:", result.data);
-            this.props.passHandler(result.data)})
+            this.props.passHandler.modalSubmit(result.data)})
           .catch(err => console.log(err))
       };
 
@@ -120,50 +106,38 @@ class ModalExampleCloseConfig extends Component {
        signUpfile = state.signUpfile;
 
       const formData = new FormData();
-       formData.append('logonId', username);
-       formData.append('password', password);
-       formData.append('role', SignupRole);
-       formData.append('fstNam', signUpFname);
-       formData.append('lstNam', signUpLname);
-       formData.append('email', email);
-       formData.append('cell', signUpCell);
-       formData.append('createdBy', username);
+       formData.append('logonId', username.trim());
+       formData.append('password', password.trim());
+       formData.append('role', SignupRole.trim());
+       formData.append('fstNam', signUpFname.trim());
+       formData.append('lstNam', signUpLname.trim());
+       formData.append('email', email.trim());
+       formData.append('cell', signUpCell.trim());
+       formData.append('createdBy', username.trim());
        if (signUpfile)
        {
         console.log("signup formData added <photo>");
         formData.append("photo", signUpfile, signUpfile.name);
        }
-
-        // const formData = new FormData();
-        // formData.append('logonId', state.username);
-        // formData.append('password', state.password);
-        // formData.append('cell', state.signUpCell);
-        // formData.append('role', state.SignupRole);
-        // formData.append('fstNam', state.signUpFname);
-        // formData.append('lstNam', state.signUpLname);
-        // formData.append('createdBy', state.username);
-        //var options = { content: formData };
-        console.log("signup formData:", formData);
+        //console.log("signup formData:", formData);
         // Display the key/value pairs
-for(var pair of formData.entries()) {
-  console.log(pair[0] + ', '+  pair[1]          ); 
-}
-        //formData.append('signUpfile', new Blob(['test payload'], { type: 'text/csv' }));
+        // for(var pair of formData.entries()) {
+        //   console.log(pair[0] + ', '+  pair[1]          ); 
+        // }
         API.userSignup(formData)
         .then((result) => {
           console.log("signup results:", result.data);
-          this.props.passHandler(result.data)})
+          this.props.passHandler.modalSubmit(result.data)})
         .catch(err => console.log(err))
     };
 
   PickForm = () => {
-    
     if (this.state.showLogin)
     return (
-      <LoginForm  textHandler={this.handleOninputTextChange} />
+      <LoginForm  textHandler={this.handleOninputChange} />
     );
     return(
-      <SignUpForm textHandler={this.handleOninputTextChange} fileHandler={this.fileChangedHandler} />
+      <SignUpForm textHandler={this.handleOninputChange} fileHandler={this.fileChangedHandler} />
     );
   };
 
@@ -184,14 +158,16 @@ for(var pair of formData.entries()) {
 
   render(props) {
     const { open, closeOnEscape, closeOnRootNodeClick } = this.state
-    console.log("ModalExampleCloseConfig.render",this.state);
-    console.log("ModalExampleCloseConfig.render",this.props);
+    const loginState = this.props.passHandler.loginState;
+    console.log("<Modal> render() state=>", this.state," props=>", this.props, " context=>", this.context);
+
 
     return (
       <div>
         {/* <Button onClick={this.closeConfigShow(false, true)}>No Close on Escape</Button> */}
-        <Button inverted onClick={this.closeConfigShow(true, false, true)}>{this.props.btnMsg}</Button>
-        <Button inverted style={this.props.logState ?{display:'none'}:{ marginLeft: '0.5em' }} onClick={this.closeConfigShow(true, false, false)}>Sign Up</Button>
+        <Label pointing='right' style={loginState.role ?{ marginRight: '0.5em' }:{display:'none'}}>{loginState.role?loginState.firstName + " " + loginState.lastName : ""}</Label>
+        <Button inverted onClick={this.closeConfigShow(true, false, true)}>{loginState.role?"Log Out": "Log In"}</Button>
+        <Button inverted style={loginState.role ?{display:'none'}:{ marginLeft: '0.5em' }} onClick={this.closeConfigShow(true, false, false)}>Sign Up</Button>
         {/* <Button as='a' inverted={!fixed} primary={fixed} style={this.state.in ?{display:'none'}:{ marginLeft: '0.5em' }}> */}
 
         <Modal
@@ -201,14 +177,6 @@ for(var pair of formData.entries()) {
         >
           <Modal.Header>{this.state.showLogin?"Log into Your Account":"Create account"}</Modal.Header>
           <Modal.Content>
-            {/* <p>Your ticket to good health</p> */}
-           
-            {/* <LoginForm style={this.state.showLogin?{ marginLeft: '0em' }:{display:'none'}} usernameHandler={this.handleOninputTextChange} passwordHandler={this.handleOninputTextChange} />
-            
-   
-            <SignUpForm style={this.state.showLogin?{display:'none'}:{ marginLeft: '0em' }} /> */}
- {/* <LoginForm  textHandler={this.handleOninputTextChange}  /> */}
-            {/* <PickForm showLogin={this.state.showLogin} textHandler={this.handleOninputTextChange} /> */}
             {this.PickForm()}
           </Modal.Content>
           <Modal.Actions>
@@ -216,13 +184,7 @@ for(var pair of formData.entries()) {
             <Button onClick={this.close} negative  color='red' inverted>
               Cancel
             </Button>
-            <Button
-              onClick={this.createClose}
-              positive
-              labelPosition='right'
-              icon='checkmark'
-              content='Continue'
-            />
+            <Button onClick={this.createClose} positive  labelPosition='right' icon='checkmark' content='Continue' />
           </Modal.Actions>
           
         </Modal>
@@ -231,4 +193,4 @@ for(var pair of formData.entries()) {
   }
 }
 
-export default ModalExampleCloseConfig
+export default ModalLogin

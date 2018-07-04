@@ -17,29 +17,32 @@ import {
 export default class DesktopContainer extends Component {
   constructor(props) {
     super(props); 
-    this.state = {
-      in: false, /*logged in ?    we can eliminate this and just use role*/
-      role: "",
-      username: "",
-      firstName: "",
-      lastName: ""
-    }  /*role is falsey when not logged in*/
+    this.state = { in: false,
+      /*logged in ?    we can eliminate this and just use role*/
+      loginInfo: {
+        role: "",
+        username: "",
+        firstName: "",
+        lastName: ""
+      }
+    } /*role is falsey when not logged in*/
 
-    this.handleClick = this.handleClick.bind(this);
+    this.modalSubmit = this.modalSubmit.bind(this);
   }
 
   hideFixedMenu = () => this.setState({ fixed: false })
   showFixedMenu = () => this.setState({ fixed: true })
   
-  handleClick(param) {
+  modalSubmit(param) {
     console.log("DesktopContainer param:", param);
 
     this.setState(prevState => ({
       in: !prevState.in,
-      role: param.role,
+      loginInfo:{role: param.role,
       username: param.logon_id,
       firstName: param.firstName,
-      lastName: param.lastName,
+      lastName: param.lastName
+    }
 
     }));
     console.log("DesktopContainer state:", this.state);
@@ -92,10 +95,10 @@ export default class DesktopContainer extends Component {
                       Sign Up
                     </Button>
                   </Link> */}
-                  <ModalLogin passHandler={this.handleClick} logState={this.state.in} btnMsg={this.state.in ? 'Log out' : 'Log in'} > 
+                  <ModalLogin passHandler={this.modalSubmit} logState={this.state.in} btnMsg={this.state.in ? 'Log out' : 'Log in'} > 
                   
                   </ModalLogin>
-                  <span>{" " + this.state.firstName + " " + this.state.lastName }</span>
+                  <span>{" " + this.state.loginInfo.firstName + " " + this.state.loginInfo.lastName }</span>
                   {/* <Button as='a' inverted={!fixed} primary={fixed} style={this.state.in ?{display:'none'}:{ marginLeft: '0.5em' }}>
                     Sign Up
                   </Button> */}

@@ -1,28 +1,28 @@
 import React, { Component } from 'react'
 //import { Button, Modal } from 'semantic-ui-react'
 //import { Input } from 'semantic-ui-react'
-import { Form } from 'semantic-ui-react'
+//import { Form } from 'semantic-ui-react'
 
-class LoginForm extends Component {
+class SessionHistoryForm extends Component {
   constructor(props, context) {
     super(props, context); 
     this.state = { };
 
-    // console.log("LoginForm state", this.state);
-    // console.log("LoginForm props", props);
-    // console.log("LoginForm context", context);
+    console.log("<SessionHistoryForm> constructor() state", this.state," props:", this.props, "context:", this.context);
+
   }
 
   render(props) {
-    // console.log("LoginForm state", this.state);
-    // console.log("LoginForm props", this.props);
+    // console.log("SessionHistoryForm state", this.state);
+    // console.log("SessionHistoryForm props", this.props);
 
+  
     return (
       <div>
     
-            <Form>
-              {/* <p>Your ticket to good health</p> */}
-              <Form.Field>
+            {/* <Form> */}
+              <p>Session History FORM</p>
+              {/* <Form.Field>
                 <label>Logon ID</label>
                 <input placeholder='Username' name="username" onChange={this.props.textHandler}/>
               </Form.Field>
@@ -30,7 +30,7 @@ class LoginForm extends Component {
                 <label>Password</label>
                 <input placeholder='Password' type="password" name="password"  onChange={this.props.textHandler} />
               </Form.Field> 
-            </Form>
+            </Form> */}
 
       </div>
     )
@@ -38,4 +38,4 @@ class LoginForm extends Component {
 }
 
 
-export default LoginForm
+export default SessionHistoryForm
